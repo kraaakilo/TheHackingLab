@@ -4,10 +4,10 @@ Vagrant.configure("2") do |config|
     
     config.vm.network "private_network", type: "dhcp"
     
-    config.vm.synced_folder "ctf_pentest", "/home/kraaakilo/Labs/ctf_pentest", owner: "kraaakilo", group: "kraaakilo", mount_options: ["dmode=775", "fmode=664"]
+    config.vm.synced_folder "ctf_pentest", "/home/vagrant/Labs/ctf_pentest"
 
-    config.vm.synced_folder "config/xfce4", "/home/kraaakilo/.config/xfce4", owner: "kraaakilo", group: "kraaakilo", mount_options: ["dmode=775", "fmode=664"]
-    config.vm.synced_folder "config/qterminal.org", "/home/kraaakilo/.config/qterminal.org", owner: "kraaakilo", group: "kraaakilo", mount_options: ["dmode=775", "fmode=664"]
+    config.vm.synced_folder "config/xfce4", "/home/vagrant/.config/xfce4"
+    config.vm.synced_folder "config/qterminal.org", "/home/vagrant/.config/qterminal.org"
 
     config.vm.provider "virtualbox" do |vb|
       vb.gui = true
@@ -17,14 +17,11 @@ Vagrant.configure("2") do |config|
     
     config.vm.provision "shell" do |shell|
       shell.inline = <<-SHELL
-        sudo useradd -m -s /usr/bin/zsh kraaakilo
-        echo "kode" | sudo passwd --stdin kraaakilo
-        echo "kraaakilo ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/kraaakilo
-        cp /vagrant/config/.zshrc /home/kraaakilo/.zshrc
-        cp -r /vagrant/config/qterminal.org /home/kraaakilo/.config/qterminal.org
-        cp -r /vagrant/fonts /home/kraaakilo/.fonts
-        chown -R kraaakilo:kraaakilo /home/kraaakilo
+        cp /vagrant/config/.zshrc /home/vagrant/.zshrc
+        cp -r /vagrant/config/fonts /home/vagrant/.fonts
+        chown -R vagrant:vagrant /home/vagrant
         sudo sed -i 's/^XKBLAYOUT.*/XKBLAYOUT="fr"/' /etc/default/keyboard
+        systemctl reboot
       SHELL
     end
 end
