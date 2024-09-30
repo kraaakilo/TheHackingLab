@@ -58,7 +58,33 @@
 
 ### Usage
 
-Feel free to use this repository to organize your files and resources for CTF competitions, penetration testing, and other security-related activities. 
+Feel free to use this repository to organize your files and resources for CTF competitions, penetration testing, and other security-related activities.
+Mine is here 
+```text
+── workspace
+    ├── capture_the_flag
+    │   ├── challenges
+    │   │   ├── cryptohack
+    │   │   ├── picoCTF
+    │   │   │   ├── binary_exploitation
+    │   │   │   ├── forensics
+    │   │   │   ├── general_skills
+    │   │   │   ├── reverse_engineering
+    │   │   │   └── web_exploitation
+    │   │   └── ThunderCipher
+    │   │       ├── binary_exploitation
+    │   │       ├── forensics
+    │   │       ├── general_skills
+    │   │       ├── reverse_engineering
+    │   │       └── web_exploitation
+    │   └── machines
+    ├── pentesting
+    └── tools
+        └── screensh00ter
+            ├── main.js
+            ├── package.json
+            └── pnpm-lock.yaml
+```
 
 - **Start the Virtual Machine**
     ```bash
@@ -71,11 +97,10 @@ Feel free to use this repository to organize your files and resources for CTF co
     ```
 
 - **Install Required Components Using the Installation Guide**
-    Follow the instructions under the **[How to Use the Script](#how-to-use-the-script-installation-guide)** section.
+    Follow the instructions under the **[How to Use the Script](#how-to-use-the-script)** section.
 
 - **Reboot Your Machine**
     ```bash
     vagrant reload
     ```
-
 Happy hacking 🥷!
