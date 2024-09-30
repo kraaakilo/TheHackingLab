@@ -1,11 +1,2 @@
-*.bak
-*.swp
-*.o
-*.out
-.vagrant/
-logs/
-*.log
-.cache/
-data/
-build/
-node_modules/
+.vagrant
+workspace

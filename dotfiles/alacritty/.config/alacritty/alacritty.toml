@@ -1,0 +1,46 @@
+import = [
+    "~/.config/alacritty/github_dark_tritanopia.toml"
+]
+
+live_config_reload = true
+
+[env]
+TERM = "xterm-256color"
+
+[cursor.style]
+shape = "Beam"
+blinking = "Always"
+
+[font]
+size = 14
+
+[font.offset]
+y = 1
+
+[font.normal]
+family = "JetBrainsMono NF"
+style = "Regular"
+
+[font.bold]
+family = "JetBrainsMono NF"
+style = "Bold"
+
+[font.italic]
+family = "JetBrainsMono NF"
+style = "Italic"
+
+[mouse]
+hide_when_typing = true
+
+[[mouse.bindings]]
+action = "PasteSelection"
+mouse = "Middle"
+
+[window]
+dynamic_padding = true
+padding.x = 0
+padding.y = 0
+
+[shell]
+program = "/usr/bin/zsh"
+args = [ "-l", "-c", "tmux attach || tmux new -s 'blackhat'" ]

@@ -1,0 +1,57 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+add_newline = true
+
+right_format = """
+  $cmd_duration\
+  $username\
+  $hostname\
+"""
+
+[username]
+style_user = 'white bold'
+style_root = 'black bold'
+format = '[$user]($style)'
+disabled = false
+show_always = true
+
+[python]
+symbol = ' '
+pyenv_version_name = true
+
+[hostname]
+ssh_only = false
+format = '$username on [$hostname](bold blue) '
+disabled = false
+
+[character] # The name of the module we are configuring is 'character'
+success_symbol = '[](bold red)'
+error_symbol = '[](bold red)'
+
+# Disable the package module, hiding it from the prompt completely
+[package]
+disabled = true
+
+[directory]
+read_only = ""
+read_only_style = "blue"
+home_symbol = "~"
+
+[git_status]
+ignore_submodules = true
+conflicted = "🏳"
+ahead = "🏎💨"
+behind = "😰"
+diverged = "😵"
+up_to_date = ""
+untracked = "🤷"
+stashed = "📦"
+modified = "📝"
+staged = '[++\($count\)](green)'
+renamed = "👅"
+deleted = "🗑"
+
+[git_branch]
+symbol = " "
+style = "bold italic red"
+format = "[git:](bold blue)[\\(](bold blue)[$branch(:$remote_branch)]($style)[\\)](bold blue) "

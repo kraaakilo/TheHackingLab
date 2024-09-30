@@ -1,0 +1,286 @@
+#!/bin/env bash
+# ==============================================================================
+# This script automates the installation and configuration of essential tools
+# in Kali Virtual Machine
+# ==============================================================================
+
+# Exit immediately if a command exits with a non-zero status
+set -e
+
+# ---------------------------- Color Definitions ----------------------------
+COLOR_RESET="\033[0m"
+COLOR_INFO="\033[1;34m"    # Blue
+COLOR_SUCCESS="\033[1;32m" # Green
+COLOR_WARNING="\033[1;33m" # Yellow
+COLOR_ERROR="\033[1;31m"   # Red
+COLOR_HEADER="\033[1;35m"  # Magenta
+
+# ---------------------------- Logging Functions ----------------------------
+
+# Display error messages and exit
+error_exit() {
+  echo -e "${COLOR_ERROR}[✖] ERROR: $1${COLOR_RESET}" >&2
+  exit 1
+}
+
+# Log messages with different severity levels
+log() {
+  local LOG_LEVEL=$1
+  shift
+  local MESSAGE="$@"
+  local TIMESTAMP
+  TIMESTAMP=$(date +'%Y-%m-%d %H:%M:%S')
+
+  case $LOG_LEVEL in
+  INFO)
+    echo -e "${COLOR_INFO}[ℹ️] INFO    ${TIMESTAMP} - ${MESSAGE}${COLOR_RESET}"
+    ;;
+  SUCCESS)
+    echo -e "${COLOR_SUCCESS}[✔️] SUCCESS ${TIMESTAMP} - ${MESSAGE}${COLOR_RESET}"
+    ;;
+  WARNING)
+    echo -e "${COLOR_WARNING}[⚠️] WARNING ${TIMESTAMP} - ${MESSAGE}${COLOR_RESET}"
+    ;;
+  ERROR)
+    echo -e "${COLOR_ERROR}[✖] ERROR   ${TIMESTAMP} - ${MESSAGE}${COLOR_RESET}"
+    ;;
+  *)
+    echo -e "${TIMESTAMP} - ${MESSAGE}"
+    ;;
+  esac
+}
+
+# ---------------------------- Banner Function ------------------------------
+
+# Display a stylish banner
+display_banner() {
+  echo -e "${COLOR_HEADER}"
+  echo "==========================================="
+  echo "   🥷  TRIPLEA's HACKING ENVIRONMENT SETUP 🛠️"
+  echo "==========================================="
+  echo -e "${COLOR_RESET}"
+}
+
+# ---------------------------- Installation Functions ----------------------
+
+# Install Oh My Zsh and its plugins
+install_oh_my_zsh() {
+  log INFO "Starting Oh My Zsh installation"
+
+  # Install Oh My Zsh without changing the current shell
+  sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended || error_exit "Failed to install Oh My Zsh"
+
+  log SUCCESS "Oh My Zsh installed successfully"
+
+  # Set the ZSH_CUSTOM path to ensure it points to the correct directory
+  ZSH_CUSTOM_PATH="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
+
+  # Install Oh My Zsh plugins
+  log INFO "Installing Oh My Zsh plugins"
+
+  # zsh-autosuggestions
+  log INFO "Installing zsh-autosuggestions plugin"
+  git clone https://github.com/zsh-users/zsh-autosuggestions "$ZSH_CUSTOM_PATH/plugins/zsh-autosuggestions" || error_exit "Failed to install zsh-autosuggestions"
+  log SUCCESS "zsh-autosuggestions installed successfully"
+
+  # zsh-syntax-highlighting
+  log INFO "Installing zsh-syntax-highlighting plugin"
+  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$ZSH_CUSTOM_PATH/plugins/zsh-syntax-highlighting" || error_exit "Failed to install zsh-syntax-highlighting"
+  log SUCCESS "zsh-syntax-highlighting installed successfully"
+}
+
+# Install essential packages by reading from a file
+install_packages() {
+  # Define the path to the packages file
+  PACKAGES_FILE="pkg.list"
+
+  # Check if the packages file exists
+  if [[ ! -f $PACKAGES_FILE ]]; then
+    error_exit "Packages file not found: $PACKAGES_FILE"
+  fi
+
+  # Read packages from the file into an array
+  mapfile -t PACKAGES <"$PACKAGES_FILE"
+
+  log INFO "Updating package lists"
+  sudo apt update -y || error_exit "Failed to update package lists"
+
+  log INFO "Installing essential packages: ${PACKAGES[*]}"
+  sudo apt install -y "${PACKAGES[@]}" || error_exit "Failed to install essential packages"
+
+  log SUCCESS "Essential packages installed successfully"
+}
+
+# Install Starship prompt
+install_starship() {
+  log INFO "Installing Starship prompt"
+  curl -sS https://starship.rs/install.sh | sh || error_exit "Failed to install Starship prompt"
+  log SUCCESS "Starship prompt installed successfully"
+}
+
+# Set up Tmux Plugin Manager (TPM)
+setup_tmux() {
+  log INFO "Installing Tmux Plugin Manager (TPM)"
+  git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm || error_exit "Failed to install TPM (Tmux Plugin Manager)"
+  log SUCCESS "TPM installed successfully"
+}
+
+# Function to install Nerd Font and Roboto fonts
+install_fonts() {
+  log INFO "Installing JetBrainsMono Nerd Font and Roboto fonts"
+
+  # Create the fonts directory if it doesn't exist
+  mkdir -p ~/.local/share/fonts || error_exit "Failed to create fonts directory"
+
+  # Install JetBrainsMono Nerd Font
+  log INFO "Downloading JetBrainsMono Nerd Font"
+  curl -L -o ~/.local/share/fonts/JetBrainsMonoNerdFont-Regular.ttf https://github.com/ryanoasis/nerd-fonts/raw/HEAD/patched-fonts/JetBrainsMono/Ligatures/Regular/JetBrainsMonoNerdFont-Regular.ttf || error_exit "Failed to download JetBrainsMono Nerd Font"
+
+  # Install Roboto fonts
+  log INFO "Downloading Roboto fonts"
+  local TEMP_ZIP="/tmp/roboto-android.zip"
+  curl -L -o "$TEMP_ZIP" https://github.com/googlefonts/roboto/releases/download/v2.138/roboto-android.zip || error_exit "Failed to download Roboto font zip"
+
+  # Unzip the downloaded Roboto fonts into the font directory
+  unzip "$TEMP_ZIP" -d ~/.local/share/fonts || error_exit "Failed to unzip Roboto fonts"
+
+  # Update the font cache
+  fc-cache -fv || error_exit "Failed to update font cache"
+
+  # Clean up
+  rm "$TEMP_ZIP"
+
+  log SUCCESS "JetBrainsMono Nerd Font and Roboto fonts installed successfully"
+}
+
+# Install Neovim
+install_nvim() {
+  log INFO "Installing Neovim (latest version)"
+  curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz || error_exit "Failed to download Neovim"
+
+  log INFO "Removing any existing Neovim installation"
+  sudo rm -rf /opt/nvim || error_exit "Failed to remove existing Neovim installation"
+
+  log INFO "Extracting Neovim to /opt directory"
+  sudo tar -C /opt -xzf nvim-linux64.tar.gz || error_exit "Failed to extract Neovim"
+
+  log INFO "Creating symbolic link for Neovim"
+  sudo ln -sf /opt/nvim/bin/nvim /usr/local/bin/nvim || error_exit "Failed to create symbolic link for Neovim"
+
+  rm nvim-linux64.tar.gz
+
+  log SUCCESS "Neovim installed successfully"
+}
+
+# Stow dotfiles with safety checks and logging
+stow_dotfiles() {
+  log INFO "Starting to stow dotfiles..."
+
+  # Define the dotfiles directory
+  DOTFILES_DIR="dotfiles"
+
+  # Ensure dotfiles directory exists
+  if [[ ! -d "$DOTFILES_DIR" ]]; then
+    error_exit "Dotfiles directory not found: $DOTFILES_DIR"
+  fi
+
+  # Loop through each subdirectory in the dotfiles directory
+  for dir in "$DOTFILES_DIR"/*; do
+    if [[ -d "$dir" ]]; then
+      local dir_name=$(basename "$dir")
+      log INFO "Stowing $dir_name..."
+
+      echo $dir_name
+      # Attempt to stow the directory
+      if stow -d $DOTFILES_DIR "$dir_name" -t ~; then
+        log SUCCESS "$dir_name stowed successfully."
+      else
+        log ERROR "Failed to stow $dir_name ; Please try to remove related files manually"
+      fi
+    fi
+  done
+
+  log SUCCESS "All dotfiles processed!"
+}
+
+# ---------------------------- Usage Function -------------------------------
+
+# Display usage information with icons
+usage() {
+  echo -e "${COLOR_HEADER}Usage: $0 [options]${COLOR_RESET}"
+  echo ""
+  echo "Options:"
+  echo -e "  📦 pkg       Install packages"
+  echo -e "  🎨 fonts     Install Fonts (JetBrainsMonoNerd && Roboto)"
+  echo -e "  🐚 omz       Install Oh My Zsh and its plugins"
+  echo -e "  🌌 starship  Install Starship prompt"
+  echo -e "  ⏱️ tmux      Set up Tmux Plugin Manager (TPM)"
+  echo -e "  🌟 nvim      Install Neovim"
+  echo -e "  📂 stow      Stow dotfiles after resetting them"
+  echo -e "  🛠️ all       Install all components"
+  echo -e "  ❓ help      Display this help message"
+  echo ""
+  echo "Example:"
+  echo "  $0 all"
+}
+
+# ---------------------------- Main Function ---------------------------------
+
+# Orchestrate the setup based on user input
+main() {
+  display_banner
+
+  if [[ "$#" -eq 0 ]]; then
+    log WARNING "No options provided"
+    usage
+    exit 1
+  fi
+
+  for option in "$@"; do
+    case "$option" in
+    pkg)
+      install_packages
+      ;;
+    fonts)
+      install_fonts
+      ;;
+    omz)
+      install_oh_my_zsh
+      ;;
+    starship)
+      install_starship
+      ;;
+    tmux)
+      setup_tmux
+      ;;
+    nvim)
+      install_nvim
+      ;;
+    stow)
+      stow_dotfiles
+      ;;
+    all)
+      install_packages
+      install_fonts
+      install_oh_my_zsh
+      install_starship
+      setup_tmux
+      install_nvim
+      stow_dotfiles
+      ;;
+    help | --help | -h)
+      usage
+      exit 0
+      ;;
+    *)
+      log ERROR "Invalid option: $option"
+      usage
+      exit 1
+      ;;
+    esac
+  done
+
+  log SUCCESS "🎉🥷 Environment setup completed successfully! 🎉"
+}
+
+main "$@"
