@@ -71,7 +71,7 @@ Feel free to use this repository to organize your files and resources for CTF co
     ```
 
 - **Install Required Components Using the Installation Guide**
-    Follow the instructions under the **[How to Use the Script](#how-to-use-the-script)** section.
+    Follow the instructions under the **[How to Use the Script](#installation-guide-to-use-the-script)** section.
 
 - **Reboot Your Machine**
     ```bash
