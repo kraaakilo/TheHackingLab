@@ -56,28 +56,58 @@
 
 ---
 
-### Usage
+### 🛠️ **Installing Vagrant**
 
-Feel free to use this repository to organize your files and resources for CTF competitions, penetration testing, and other security-related activities.
-Mine is here 
-```text
+To set up Vagrant for the **TripleA Hacking Lab**, follow these steps:
+
+1. **Install VirtualBox**
+   Vagrant uses VirtualBox as its default provider. Install it using your package manager or download it from the [VirtualBox website](https://www.virtualbox.org/).
+
+2. **Install Vagrant**
+   - On **Debian/Ubuntu**:
+     ```bash
+     sudo apt install vagrant
+     ```
+   - On **Fedora**:
+     ```bash
+     sudo dnf install vagrant
+     ```
+   - On **macOS** (using Homebrew):
+     ```bash
+     brew install vagrant
+     ```
+   - Alternatively, you can download the installer from the [Vagrant website](https://www.vagrantup.com/downloads).
+
+3. **Verify Vagrant Installation**
+   Run the following command to ensure Vagrant is installed correctly:
+   ```bash
+   vagrant --version
+   ```
+
+---
+
+### 📁 **Project Structure**
+
+Feel free to use this repository to organize your files and resources for CTF competitions, penetration testing, and other security-related activities. Here’s an example of my workspace structure:
+
+```plaintext
 ── workspace
     ├── capture_the_flag
-    │   ├── challenges
-    │   │   ├── cryptohack
-    │   │   ├── picoCTF
-    │   │   │   ├── binary_exploitation
-    │   │   │   ├── forensics
-    │   │   │   ├── general_skills
-    │   │   │   ├── reverse_engineering
-    │   │   │   └── web_exploitation
-    │   │   └── ThunderCipher
-    │   │       ├── binary_exploitation
-    │   │       ├── forensics
-    │   │       ├── general_skills
-    │   │       ├── reverse_engineering
-    │   │       └── web_exploitation
-    │   └── machines
+    │   ├── challenges
+    │   │   ├── cryptohack
+    │   │   ├── picoCTF
+    │   │   │   ├── binary_exploitation
+    │   │   │   ├── forensics
+    │   │   │   ├── general_skills
+    │   │   │   ├── reverse_engineering
+    │   │   │   └── web_exploitation
+    │   │   └── ThunderCipher
+    │   │       ├── binary_exploitation
+    │   │       ├── forensics
+    │   │       ├── general_skills
+    │   │       ├── reverse_engineering
+    │   │       └── web_exploitation
+    │   └── machines
     ├── pentesting
     └── tools
         └── screensh00ter
@@ -86,21 +116,25 @@ Mine is here
             └── pnpm-lock.yaml
 ```
 
-- **Start the Virtual Machine**
-    ```bash
-    vagrant up
-    ```
+### 🚀 **Start the Virtual Machine**
+To initialize your virtual machine, run:
+```bash
+vagrant up
+```
 
-- **Navigate to the Vagrant Directory**
-    ```bash
-    cd /vagrant
-    ```
+### 🔄 **Navigate to the Vagrant Directory**
+Once the VM is running, access the shared directory:
+```bash
+cd /vagrant
+```
 
-- **Install Required Components Using the Installation Guide**
-    Follow the instructions under the **[How to Use the Script](#-how-to-use-the-script)** section.
+### 🛠️ **Install Required Components Using the Installation Guide**
+Follow the instructions under the **[How to Use the Script](#-how-to-use-the-script)** section to install the necessary components.
 
-- **Reboot Your Machine**
-    ```bash
-    vagrant reload
-    ```
-Happy hacking 🥷!
+### 🔄 **Reboot Your Machine**
+If needed, you can reboot your VM with:
+```bash
+vagrant reload
+```
+
+Happy hacking! 🥷
