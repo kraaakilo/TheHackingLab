@@ -2,6 +2,10 @@ Vagrant.configure("2") do |config|
   config.vm.box = "kalilinux/rolling"
   config.vm.network "private_network", ip:"192.168.56.100"
   config.vm.network "public_network", ip:"192.168.1.50", bridge: ["enp3s0","wlan0"]
+
+  # Uncomment it after creating workspace directory in current dir
+  # config.vm.synced_folder "workspace", "/home/vagrant/workspace"
+  
   config.vm.provider "virtualbox" do |vb|
     vb.gui = true
     vb.memory = "8192"
