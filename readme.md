@@ -133,11 +133,7 @@ Follow the instructions under the **[How to Use the Script](#-how-to-use-the-scr
 
 ### 🔄 **Reboot Your Machine**
 If needed, you can reboot your VM with:
-
-
-Demo is here : [https://www.youtube.com/watch?v=DRU3zk5F30k](https://www.youtube.com/watch?v=DRU3zk5F30k)
 ```bash
 vagrant reload
 ```
-
-Happy hacking! 🥷
+Demo is here : [https://www.youtube.com/watch?v=DRU3zk5F30k](https://www.youtube.com/watch?v=DRU3zk5F30k)Happy hacking! 🥷
