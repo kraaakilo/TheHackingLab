@@ -97,7 +97,7 @@ Mine is here
     ```
 
 - **Install Required Components Using the Installation Guide**
-    Follow the instructions under the **[How to Use the Script](#how-to-use-the-script)** section.
+    Follow the instructions under the **[How to Use the Script](#-how-to-use-the-script)** section.
 
 - **Reboot Your Machine**
     ```bash

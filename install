@@ -280,7 +280,7 @@ main() {
     esac
   done
 
-  log SUCCESS "🎉🥷 Environment setup completed successfully! 🎉"
+  log SUCCESS "🎉🎉🥷 Environment setup completed successfully! 🎉"
 }
 
 main "$@"
