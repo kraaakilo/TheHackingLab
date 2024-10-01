@@ -14,35 +14,44 @@
     ```
 
 3. **Run the Script with Desired Options**
+
     - **Install All Components**
       ```bash
       ./install all
       ```
+
     - **Install Specific Components**
+
       - Install default packages:
         ```bash
         ./install pkg
         ```
+
       - Install Nerd Fonts:
         ```bash
         ./install fonts
         ```
+
       - Install Oh My Zsh:
         ```bash
         ./install omz
         ```
+
       - Install Starship Prompt:
         ```bash
         ./install starship
         ```
+
       - Set up Tmux Plugin Manager:
         ```bash
         ./install tmux
         ```
+
       - Install Neovim:
         ```bash
         ./install nvim
         ```
+
 
 4. **Display Help**
     ```bash
@@ -64,18 +73,27 @@ To set up Vagrant for the **TripleA Hacking Lab**, follow these steps:
    Vagrant uses VirtualBox as its default provider. Install it using your package manager or download it from the [VirtualBox website](https://www.virtualbox.org/).
 
 2. **Install Vagrant**
+
+   - On **ArchLinux** (using pacman):
+     ```bash
+     sudo pacman -S vagrant
+     ```
+
    - On **Debian/Ubuntu**:
      ```bash
      sudo apt install vagrant
      ```
+
    - On **Fedora**:
      ```bash
      sudo dnf install vagrant
      ```
+
    - On **macOS** (using Homebrew):
      ```bash
      brew install vagrant
      ```
+
    - Alternatively, you can download the installer from the [Vagrant website](https://www.vagrantup.com/downloads).
 
 3. **Verify Vagrant Installation**
@@ -132,8 +150,10 @@ cd /vagrant
 Follow the instructions under the **[How to Use the Script](#-how-to-use-the-script)** section to install the necessary components.
 
 ### 🔄 **Reboot Your Machine**
-If needed, you can reboot your VM with:
+You need to reboot your VM from host with:
 ```bash
 vagrant reload
 ```
-Demo is here : [https://www.youtube.com/watch?v=DRU3zk5F30k](https://www.youtube.com/watch?v=DRU3zk5F30k)Happy hacking! 🥷
+Demo is here : [https://www.youtube.com/watch?v=DRU3zk5F30k](https://www.youtube.com/watch?v=DRU3zk5F30k)
+
+Happy hacking! 🥷
