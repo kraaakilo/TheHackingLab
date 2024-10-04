@@ -1,0 +1,194 @@
+#!/usr/bin/python3
+import os
+import sys
+import re
+import unicodedata
+import random
+from typing import List
+from colorama import Fore, Style, init
+import platform
+
+# Initialize colorama for cross-platform color support
+init(autoreset=True)
+
+class TripleACTFManager:
+    DEFAULT_CATEGORIES = [
+        "web_exploitation",
+        "reverse_engineering",
+        "general_skills",
+        "forensics",
+        "binary_exploitation",
+        "osint",
+        "misc"
+    ]
+
+    COOL_MESSAGES = {
+        'platform': [
+            "🚀 Ready to conquer another CTF platform?",
+            "🎯 Target acquired! Let's choose your battleground.",
+            "🔥 Time to unleash your hacking prowess!",
+            "🌟 Another day, another CTF challenge to crush!"
+        ],
+        'category': [
+            "🎭 What's your hacking style today?",
+            "🧩 Pick your puzzle, digital warrior!",
+            "🔓 Choose your lock to pick!",
+            "🎪 Step right up! Choose your cyber arena!"
+        ],
+        'challenge': [
+            "⚔️ Prepare for cyber battle!",
+            "🏆 Your next victory awaits...",
+            "🎮 Game on, hacker! Choose your challenge.",
+            "🔍 Time to find that flag!"
+        ],
+        'success': [
+            "🚩 Challenge accepted! Let the hack begin!",
+            "💻 Your digital playground is ready!",
+            "⏳ The clock is ticking... Hack away!",
+            "🎉 Lock picked! Time to solve the puzzle!"
+        ]
+    }
+
+    def __init__(self, base_directory: str = os.getcwd()):
+        # Use an absolute path for the base directory
+        self.base_directory = os.path.abspath(os.path.expanduser(base_directory))
+        print(self.base_directory)
+        try:
+            # Attempt to create the base directory
+            os.makedirs(self.base_directory, exist_ok=True)
+            print(f"Base directory set to: {self.base_directory}")
+        except Exception as e:
+            print(f"Error creating base directory: {e}")
+
+    @staticmethod
+    def print_banner():
+        os.system("clear")
+        print(f"""
+{Fore.YELLOW}🏆 Welcome to the CTF Challenge Manager 🏆{Fore.CYAN}
+═══════════════════════════════════════════|
+{Fore.GREEN}[ Hack Smarter, Not Harder ]{Fore.CYAN}
+
+  ████████    █████████  ██████   ██████
+ ███░░░░███  ███░░░░░███░░██████ ██████ 
+░░░    ░███ ███     ░░░  ░███░█████░███ 
+   ██████░ ░███          ░███░░███ ░███ 
+  ░░░░░░███░███          ░███ ░░░  ░███ 
+ ███   ░███░░███     ███ ░███      ░███ 
+░░████████  ░░█████████  █████     █████
+ ░░░░░░░░    ░░░░░░░░░  ░░░░░     ░░░░░ 
+{Fore.YELLOW}3AChallengeManager | By kraaakilo{Fore.CYAN}
+═══════════════════════════════════════════
+""")
+
+    @staticmethod
+    def print_section(title: str, message_type: str):
+        cool_message = random.choice(TripleACTFManager.COOL_MESSAGES[message_type])
+        print(f"\n{Fore.YELLOW}{'='*60}")
+        print(f"{Fore.CYAN}{title.center(60)}")
+        print(f"{Fore.GREEN}{cool_message.center(60)}")
+        print(f"{Fore.YELLOW}{'='*60}{Style.RESET_ALL}")
+
+    @staticmethod
+    def slugify(text: str) -> str:
+        text = text.lower()
+        text = unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('utf-8')
+        text = re.sub(r'[^\w\s-]', '', text)
+        text = re.sub(r'[-\s]+', '-', text).strip('-')
+        return text
+
+    def get_existing_items(self, directory: str) -> List[str]:
+        if not os.path.exists(directory):
+            return []
+        return [d for d in os.listdir(directory) if os.path.isdir(os.path.join(directory, d))]
+
+    def create_or_select_item(self, item_type: str, parent_directory: str) -> str:
+        self.print_section(f"Select or Create {item_type.title()}", item_type)
+        existing_items = self.get_existing_items(parent_directory)
+
+        if existing_items:
+            print(f"\n{Fore.GREEN}Existing {item_type}s:")
+            for i, item in enumerate(existing_items, 1):
+                print(f"{Fore.CYAN}{i}. {Fore.WHITE}{item}")
+            print(f"{Fore.YELLOW}{len(existing_items) + 1}. Create new {item_type}")
+
+            while True:
+                try:
+                    choice = int(input(f"\n{Fore.GREEN}Select {item_type} (1-{len(existing_items) + 1}): {Fore.WHITE}"))
+                    if 1 <= choice <= len(existing_items):
+                        return existing_items[choice - 1]
+                    elif choice == len(existing_items) + 1:
+                        break
+                    else:
+                        print(f"{Fore.RED}Invalid choice. Please try again.{Style.RESET_ALL}")
+                except ValueError:
+                    print(f"{Fore.RED}Please enter a number.{Style.RESET_ALL}")
+
+        while True:
+            new_item = input(f"\n{Fore.GREEN}Enter new {item_type} name: {Fore.WHITE}").strip()
+            if new_item:
+                slugified_name = self.slugify(new_item)
+                if slugified_name != new_item:
+                    print(f"{Fore.YELLOW}Name will be slugified to: {Fore.WHITE}{slugified_name}")
+                    confirm = input(f"{Fore.GREEN}Is this okay? (y/n): {Fore.WHITE}").lower().strip()
+                    if confirm != 'y':
+                        continue
+                return slugified_name
+            print(f"{Fore.RED}Please enter a valid name.{Style.RESET_ALL}")
+
+    def generate_default_categories(self, platform_directory: str):
+        print(f"\n{Fore.YELLOW}Generating default categories...")
+        for category in self.DEFAULT_CATEGORIES:
+            os.makedirs(os.path.join(platform_directory, category), exist_ok=True)
+            print(f"{Fore.GREEN}✓ Created: {Fore.WHITE}{category}")
+        print(f"\n{Fore.GREEN}All categories generated successfully! 🎉{Style.RESET_ALL}")
+
+    def run(self):
+        try:
+            self.print_banner()
+
+            # Select or create platform
+            platform = self.create_or_select_item("platform", self.base_directory)
+            platform_directory = os.path.join(self.base_directory, platform)
+            os.makedirs(platform_directory, exist_ok=True)
+
+            # Generate default categories if it's a new platform
+            if not self.get_existing_items(platform_directory):
+                print(f"\n{Fore.CYAN}🎁 New platform detected! Would you like some starter categories?")
+                generate_defaults = input(f"{Fore.GREEN}Generate default categories? (y/n): {Fore.WHITE}").lower().strip()
+                if generate_defaults == 'y':
+                    self.generate_default_categories(platform_directory)
+
+            # Select or create category
+            category = self.create_or_select_item("category", platform_directory)
+            category_directory = os.path.join(platform_directory, category)
+            os.makedirs(category_directory, exist_ok=True)
+
+            # Select or create challenge
+            challenge = self.create_or_select_item("challenge", category_directory)
+            challenge_directory = os.path.join(category_directory, challenge)
+            os.makedirs(challenge_directory, exist_ok=True)
+
+            # Change to challenge directory and display success message
+            os.chdir(challenge_directory)
+
+            self.print_section("Challenge Ready!", "success")
+            print(f"{Fore.GREEN}📂 Working directory: {Fore.WHITE}{challenge_directory}")
+            print(f"\n{Fore.YELLOW}🚀 Time to hack! May the flags be with you! 🏁{Style.RESET_ALL}")
+
+        except KeyboardInterrupt:
+            print(f"\n{Fore.RED}Mission aborted by user. Hack you later! 👋{Style.RESET_ALL}")
+            sys.exit(0)
+
+def check_os() -> bool:
+    return os.name == 'posix' or platform.system() == "Linux"
+
+def main():
+    if check_os() == False:
+        print(f"\n{Fore.RED}Mission aborted due to incompatible OS. Maybe u can try Linux haha 😟{Style.RESET_ALL}")
+    # Change this to fill your needs
+    workspace = "~/Labs/hacking/workspace/capture_the_flag/challenges/"
+    ctf_manager = TripleACTFManager(base_directory=workspace)
+    ctf_manager.run()
+
+if __name__ == "__main__":
+    main()

@@ -108,6 +108,8 @@ To set up Vagrant for the **TripleA Hacking Lab**, follow these steps:
 
 Feel free to use this repository to organize your files and resources for CTF competitions, penetration testing, and other security-related activities. Here’s an example of my workspace structure:
 
+Access and run the challenger script in this repository to automate the flag creation process.
+
 ```plaintext
 ── workspace
     ├── capture_the_flag
